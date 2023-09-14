@@ -1,6 +1,6 @@
 //Source https://github.com/orca-so/typescript-sdk
 
-import { readFile } from "mz/fs";
+import { readFileSync } from "fs";
 import { Connection, Keypair } from "@solana/web3.js";
 // import { getOrca, OrcaFarmConfig, OrcaPoolConfig } from "@orca-so/sdk";
 import { getOrca, OrcaFarmConfig, OrcaPoolConfig, Network } from "@orca-so/sdk";
@@ -9,7 +9,7 @@ import Decimal from "decimal.js";
 const main = async () => {
   /*** Setup ***/
   // 1. Read secret key file to get owner keypair
-  const secretKeyString = await readFile("/Users/scuba/my-wallet/my-keypair.json", {
+  const secretKeyString = await readFileSync("/Users/scuba/my-wallet/my-keypair.json", {
     encoding: "utf8",
   });
   const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
