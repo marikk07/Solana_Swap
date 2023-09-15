@@ -5,15 +5,21 @@ import { Connection, Keypair } from "@solana/web3.js";
 // import { getOrca, OrcaFarmConfig, OrcaPoolConfig } from "@orca-so/sdk";
 import { getOrca, OrcaFarmConfig, OrcaPoolConfig, Network } from "@orca-so/sdk";
 import Decimal from "decimal.js";
+import solanaweb3 from "@solana/web3.js";
+import bs58 from "bs58";
 
 const main = async () => {
   /*** Setup ***/
   // 1. Read secret key file to get owner keypair
-  const secretKeyString = await readFileSync("/Users/scuba/my-wallet/my-keypair.json", {
-    encoding: "utf8",
-  });
-  const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
-  const owner = Keypair.fromSecretKey(secretKey);
+  // const secretKeyString = await readFileSync("/Users/scuba/my-wallet/my-keypair.json", {
+  //   encoding: "utf8",
+  // });
+
+  // const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
+  // const owner = Keypair.fromSecretKey(secretKey);
+
+  const owner = solanaweb3.Keypair.fromSecretKey(
+          bs58.decode("5PSAw83j32BC4MP95Vkrc7SgbezQw6h6Z68ekrUphBzexXaedzgB5XBHx7Ghvp6WZMxZ6BUAqPi1zkXxCjVoDF3k"));
 
   // 2. Initialzie Orca object with mainnet connection
   // const connection = new Connection("https://api.mainnet-beta.solana.com", "singleGossip");
@@ -35,63 +41,63 @@ const main = async () => {
     const swapTxId = await swapPayload.execute();
     console.log("Swapped:", swapTxId, "\n");
 
-    /*** Pool Deposit ***/
-    // 4. Deposit SOL and ORCA for LP token
-    const { maxTokenAIn, maxTokenBIn, minPoolTokenAmountOut } = await orcaSolPool.getDepositQuote(
-      orcaAmount,
-      solAmount
-    );
-
-    console.log(
-      `Deposit at most ${maxTokenBIn.toNumber()} SOL and ${maxTokenAIn.toNumber()} ORCA, for at least ${minPoolTokenAmountOut.toNumber()} LP tokens`
-    );
-    const poolDepositPayload = await orcaSolPool.deposit(
-      owner,
-      maxTokenAIn,
-      maxTokenBIn,
-      minPoolTokenAmountOut
-    );
-    const poolDepositTxId = await poolDepositPayload.execute();
-    console.log("Pool deposited:", poolDepositTxId, "\n");
-
-    /*** Farm Deposit ***/
-    // 5. Deposit some ORCA_SOL LP token for farm token
-    const lpBalance = await orcaSolPool.getLPBalance(owner.publicKey);
-    const orcaSolFarm = orca.getFarm(OrcaFarmConfig.ORCA_SOL_AQ);
-    const farmDepositPayload = await orcaSolFarm.deposit(owner, lpBalance);
-    const farmDepositTxId = await farmDepositPayload.execute();
-    console.log("Farm deposited:", farmDepositTxId, "\n");
-    // Note 1: for double dip, repeat step 5 but with the double dip farm
-    // Note 2: to harvest reward, orcaSolFarm.harvest(owner)
-    // Note 3: to get harvestable reward amount, orcaSolFarm.getHarvestableAmount(owner.publicKey)
-
-    /*** Farm Withdraw ***/
-    // 6. Withdraw ORCA_SOL LP token, in exchange for farm token
-    const farmBalance = await orcaSolFarm.getFarmBalance(owner.publicKey); // withdraw the entire balance
-    const farmWithdrawPayload = await orcaSolFarm.withdraw(owner, farmBalance);
-    const farmWithdrawTxId = await farmWithdrawPayload.execute();
-    console.log("Farm withdrawn:", farmWithdrawTxId, "\n");
-
-    /*** Pool Withdraw ***/
-    // 6. Withdraw SOL and ORCA, in exchange for ORCA_SOL LP token
-    const withdrawTokenAmount = await orcaSolPool.getLPBalance(owner.publicKey);
-    const withdrawTokenMint = orcaSolPool.getPoolTokenMint();
-    const { maxPoolTokenAmountIn, minTokenAOut, minTokenBOut } = await orcaSolPool.getWithdrawQuote(
-      withdrawTokenAmount,
-      withdrawTokenMint
-    );
-
-    console.log(
-      `Withdraw at most ${maxPoolTokenAmountIn.toNumber()} ORCA_SOL LP token for at least ${minTokenAOut.toNumber()} ORCA and ${minTokenBOut.toNumber()} SOL`
-    );
-    const poolWithdrawPayload = await orcaSolPool.withdraw(
-      owner,
-      maxPoolTokenAmountIn,
-      minTokenAOut,
-      minTokenBOut
-    );
-    const poolWithdrawTxId = await poolWithdrawPayload.execute();
-    console.log("Pool withdrawn:", poolWithdrawTxId, "\n");
+  //   /*** Pool Deposit ***/
+  //   // 4. Deposit SOL and ORCA for LP token
+  //   const { maxTokenAIn, maxTokenBIn, minPoolTokenAmountOut } = await orcaSolPool.getDepositQuote(
+  //     orcaAmount,
+  //     solAmount
+  //   );
+  //
+  //   console.log(
+  //     `Deposit at most ${maxTokenBIn.toNumber()} SOL and ${maxTokenAIn.toNumber()} ORCA, for at least ${minPoolTokenAmountOut.toNumber()} LP tokens`
+  //   );
+  //   const poolDepositPayload = await orcaSolPool.deposit(
+  //     owner,
+  //     maxTokenAIn,
+  //     maxTokenBIn,
+  //     minPoolTokenAmountOut
+  //   );
+  //   const poolDepositTxId = await poolDepositPayload.execute();
+  //   console.log("Pool deposited:", poolDepositTxId, "\n");
+  //
+  //   /*** Farm Deposit ***/
+  //   // 5. Deposit some ORCA_SOL LP token for farm token
+  //   const lpBalance = await orcaSolPool.getLPBalance(owner.publicKey);
+  //   const orcaSolFarm = orca.getFarm(OrcaFarmConfig.ORCA_SOL_AQ);
+  //   const farmDepositPayload = await orcaSolFarm.deposit(owner, lpBalance);
+  //   const farmDepositTxId = await farmDepositPayload.execute();
+  //   console.log("Farm deposited:", farmDepositTxId, "\n");
+  //   // Note 1: for double dip, repeat step 5 but with the double dip farm
+  //   // Note 2: to harvest reward, orcaSolFarm.harvest(owner)
+  //   // Note 3: to get harvestable reward amount, orcaSolFarm.getHarvestableAmount(owner.publicKey)
+  //
+  //   /*** Farm Withdraw ***/
+  //   // 6. Withdraw ORCA_SOL LP token, in exchange for farm token
+  //   const farmBalance = await orcaSolFarm.getFarmBalance(owner.publicKey); // withdraw the entire balance
+  //   const farmWithdrawPayload = await orcaSolFarm.withdraw(owner, farmBalance);
+  //   const farmWithdrawTxId = await farmWithdrawPayload.execute();
+  //   console.log("Farm withdrawn:", farmWithdrawTxId, "\n");
+  //
+  //   /*** Pool Withdraw ***/
+  //   // 6. Withdraw SOL and ORCA, in exchange for ORCA_SOL LP token
+  //   const withdrawTokenAmount = await orcaSolPool.getLPBalance(owner.publicKey);
+  //   const withdrawTokenMint = orcaSolPool.getPoolTokenMint();
+  //   const { maxPoolTokenAmountIn, minTokenAOut, minTokenBOut } = await orcaSolPool.getWithdrawQuote(
+  //     withdrawTokenAmount,
+  //     withdrawTokenMint
+  //   );
+  //
+  //   console.log(
+  //     `Withdraw at most ${maxPoolTokenAmountIn.toNumber()} ORCA_SOL LP token for at least ${minTokenAOut.toNumber()} ORCA and ${minTokenBOut.toNumber()} SOL`
+  //   );
+  //   const poolWithdrawPayload = await orcaSolPool.withdraw(
+  //     owner,
+  //     maxPoolTokenAmountIn,
+  //     minTokenAOut,
+  //     minTokenBOut
+  //   );
+  //   const poolWithdrawTxId = await poolWithdrawPayload.execute();
+  //   console.log("Pool withdrawn:", poolWithdrawTxId, "\n");
   } catch (err) {
     console.warn(err);
   }
