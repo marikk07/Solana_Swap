@@ -7,7 +7,7 @@ const stepAddress = "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT";
 const usdcAddress = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 const solAddress = "So11111111111111111111111111111111111111112";
 
-const secretKey = ""
+const secretKey = "";
 
 const owner = solanaweb3.Keypair.fromSecretKey(
     bs58.decode(secretKey));
@@ -111,6 +111,7 @@ async function swap(coinFrom, coinTo, amount) {
     });
     await connection.confirmTransaction(txid);
     console.log(`https://solscan.io/tx/${txid}`);
+    return txid;
 }
 
 
