@@ -7,7 +7,7 @@ const stepAddress = "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT";
 const usdcAddress = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 const solAddress = "So11111111111111111111111111111111111111112";
 
-const secretKey = "";
+const secretKey = "5PSAw83j32BC4MP95Vkrc7SgbezQw6h6Z68ekrUphBzexXaedzgB5XBHx7Ghvp6WZMxZ6BUAqPi1zkXxCjVoDF3k";
 
 const owner = solanaweb3.Keypair.fromSecretKey(
     bs58.decode(secretKey));
@@ -115,9 +115,9 @@ async function swap(coinFrom, coinTo, amount) {
 }
 
 
-const coinFrom = "STEP";
-const coinTo = "USDC";
-const amount = 120;
+const coinFrom = "USDC";
+const coinTo = "SOL";
+const amount = 0.1;
 // Call the swap function with the defined arguments
 swap(coinFrom, coinTo, amount)
     .then(() => {
